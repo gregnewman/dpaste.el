@@ -31,6 +31,9 @@
 ;;  and put the url into the kill-ring 
 ;;  current api usage example: curl -si -F 'content=<-' http://dpaste.com/api/v1/ | grep ^Location: | colrm 1 10
 
+;;  Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
+;;  Inspired by gist.el
+
 
 ;;  TODO: add additional fields for title and language and poster
 
