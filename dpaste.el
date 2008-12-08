@@ -35,7 +35,7 @@
 ;;  Inspired by gist.el
 
 
-;;  TODO: add additional fields for title and language and poster
+;;  TODO: add additional fields for title and poster
 
 ;;; Code:
 
@@ -65,8 +65,9 @@
     (shell-command-on-region
      begin end
      (format (concat "curl -si "
+                     "-F 'language=%s' "
                      "-F 'content=<-' "
-                     "http://dpaste.com/api/v1/"))
+                     "http://dpaste.com/api/v1/")ext name)
      output)
     (with-current-buffer output
       (search-backward-regexp "^Location: \\([A-Za-z0-9]+.*\\)")

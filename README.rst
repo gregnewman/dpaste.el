@@ -20,4 +20,4 @@ Will post the marked region or current buffer to dpaste.com and put the curl to 
 
 **TODO:**
 
-Add support for additional fields; language, poster, title
+Finish adding support for additional fields; language, poster, title
