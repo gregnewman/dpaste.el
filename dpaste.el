@@ -60,17 +60,14 @@
          (name (file-name-nondirectory file))
          (ext (or (cdr (assoc major-mode dpaste-supported-modes-alist))
                   (file-name-extension file)
-                  "txt"))
-         (output (generate-new-buffer " *dpaste*")))
-    (shell-command-on-region
-     begin end
-     (format (concat "curl -si "
-                     "-F 'language=%s' "
-                     "-F 'content=<-' "
-                     "http://dpaste.com/api/v1/")ext name)
-     output)
+                  ""))
+         (output (generate-new-buffer "*dpaste*")))
+    (shell-command-on-region begin end
+			     (concat "curl -si -F 'language=" ext
+				     "' -F 'content=<-' http://dpaste.com/api/v1/")
+			     output)
     (with-current-buffer output
-      (search-backward-regexp "^Location: \\([A-Za-z0-9]+.*\\)")
+      (search-backward-regexp "^Location: \\([A-Za-z0-9]+.*\\)$")
       (message "dpaste created: %s" (match-string 1))
       (kill-new (match-string 1)))
    (kill-buffer output)))
