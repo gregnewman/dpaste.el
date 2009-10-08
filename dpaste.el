@@ -25,15 +25,16 @@
 ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ;; MA 02111-1307, USA.
 
-
 ;;; Commentary:
-;;  dpaste.el will post a region or if no region is selected, the buffer to http://dpaste.com and
-;;  and put the url into the kill-ring
-;;  current api usage example: curl -si -F 'content=<-' http://dpaste.com/api/v1/ | grep ^Location: | colrm 1 10
 
-;;  Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
-;;  Inspired by gist.el
+;; dpaste.el will post a region or if no region is selected, the buffer to
+;; http://dpaste.com and and put the url into the kill-ring current api usage
+;; example:
 
+;;     curl -si -F 'content=<-' http://dpaste.com/api/v1/ | grep  ^Location: | colrm 1 10
+
+;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
+;; Inspired by gist.el
 
 ;;  TODO: add additional fields for title and poster
 
