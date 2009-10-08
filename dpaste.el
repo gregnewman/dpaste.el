@@ -38,7 +38,7 @@
 ;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
 ;; Inspired by gist.el
 
-;;  TODO: add additional fields for title and poster
+;;  TODO: add field for title
 
 ;;; Code:
 
