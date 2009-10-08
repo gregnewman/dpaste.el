@@ -1,6 +1,6 @@
 ;;; dpaste.el --- Emacs integration for dpaste.com
 
-;; Copyright (C) 2008 Greg Newman <20seven.org>
+;; Copyright (C) 2008, 2009 Greg Newman <20seven.org>
 
 ;; Version: 0.1.2
 ;; Keywords: paste pastie pastebin dpaste python
