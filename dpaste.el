@@ -50,7 +50,7 @@
 
 ;;     (require 'dpaste nil)
 ;;     (global-set-key (kbd "C-c p") 'dpaste-region-or-buffer)
-;;     (setq dpaste-poster "semente")
+;;     (setq dpaste-poster "Guido van Rossum")
 
 ;; Then with C-c p you can run `dpaste-region-or-buffer'. With a prefix
 ;; argument (C-u C-c p), your paste will use the hold option.
