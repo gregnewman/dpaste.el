@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2008, 2009 Greg Newman <20seven.org>
 
-;; Version: 0.1.2
+;; Version: 0.1.3
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
 ;; Author: Greg Newman <grep@20seven.org>
@@ -28,17 +28,31 @@
 
 ;;; Commentary:
 
-;; dpaste.el will post a region or if no region is selected, the buffer to
-;; http://dpaste.com and and put the url into the kill-ring. Current api usage
-;; example:
-;;
+;; dpaste.el provides functions to post a region or buffer to
+;; <http://dpaste.com> and put the paste URL into the kill-ring.
+
+;; Inspired by gist.el
+
+;; Current dpaste.com API usage example:
+
 ;;     curl -si -F 'content=<-' http://dpaste.com/api/v1/ | \
 ;;         grep ^Location: | colrm 1 10
 
 ;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste
 ;; service.
 
-;; Inspired by gist.el
+;; Installation:
+
+;; Put this file in a directory where Emacs can find it. On GNU/Linux
+;; it's usually /usr/local/share/emacs/site-lisp/ and on Windows it's
+;; something like "C:\Program Files\Emacs<version>\site-lisp". Then
+;; add the follow instructions in your .emacs.el:
+
+;;     (autoload 'dpaste "dpaste" nil t)
+;;     (global-set-key (kbd "C-c p") 'dpaste-region-or-buffer)
+
+;; Then with C-c p you can run `dpaste-region-or-buffer'. With a prefix
+;; argument (C-u C-c p), your paste will use the hold option.
 
 ;; Todo:
 
@@ -64,43 +78,51 @@
 
 
 ;;;###autoload
-(defun dpaste-region (begin end)
+(defun dpaste-region (begin end &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
-url to the kill-ring."
-  (interactive "r")
+url to the kill-ring.
+
+With a prefix argument, use hold option."
+  (interactive "r\nP")
   (let* ((file (or (buffer-file-name) (buffer-name)))
          (name (file-name-nondirectory file))
          (lang (or (cdr (assoc major-mode dpaste-supported-modes-alist))
                   ""))
+         (hold (if arg "on" "off"))
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
 			     (concat "curl -si"
                                      " -F 'poster=" dpaste-poster "'"
                                      " -F 'language=" lang "'"
                                      " -F 'content=<-'"
+                                     " -F 'hold=" hold "'"
                                      " http://dpaste.com/api/v1/")
 			     output)
     (with-current-buffer output
-      (search-forward-regexp "^Location: \\(http://dpaste\\.com/[0-9]+/\\)")
+      (search-forward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[0-9]+/\\)")
       (message "Paste created: %s (yanked)" (match-string 1))
       (kill-new (match-string 1)))
     (kill-buffer output)))
 
 ;;;###autoload
-(defun dpaste-buffer ()
+(defun dpaste-buffer (&optional arg)
   "Post the current buffer to dpaste.com and yank the url to the
-kill-ring."
-  (interactive)
-  (dpaste-region (point-min) (point-max)))
+kill-ring.
+
+With a prefix argument, use hold option."
+  (interactive "P")
+  (dpaste-region (point-min) (point-max) arg))
 
 ;;;###autoload
-(defun dpaste-region-or-buffer ()
+(defun dpaste-region-or-buffer (&optional arg)
   "Post the current region or buffer to dpaste.com and yank the
-url to the kill-ring."
-  (interactive)
+url to the kill-ring.
+
+With a prefix argument, use hold option."
+  (interactive "P")
   (condition-case nil
-      (dpaste-region (point) (mark))
-    (mark-inactive (dpaste-buffer))))
+      (dpaste-region (point) (mark) arg)
+    (mark-inactive (dpaste-buffer arg))))
 
 
 (provide 'dpaste)
