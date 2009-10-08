@@ -1,7 +1,7 @@
 ;;; dpaste.el --- Emacs integration for dpaste.com
 
 ;; Copyright (C) 2008 Greg Newman <20seven.org>
-     
+
 ;; Version: 0.1.1
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
@@ -24,11 +24,11 @@
 ;; along with GNU Emacs; see the file COPYING.  If not, write to the
 ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ;; MA 02111-1307, USA.
- 
+
 
 ;;; Commentary:
 ;;  dpaste.el will post a region or if no region is selected, the buffer to http://dpaste.com and
-;;  and put the url into the kill-ring 
+;;  and put the url into the kill-ring
 ;;  current api usage example: curl -si -F 'content=<-' http://dpaste.com/api/v1/ | grep ^Location: | colrm 1 10
 
 ;;  Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
