@@ -29,20 +29,23 @@
 ;;; Commentary:
 
 ;; dpaste.el will post a region or if no region is selected, the buffer to
-;; http://dpaste.com and and put the url into the kill-ring current api usage
+;; http://dpaste.com and and put the url into the kill-ring. Current api usage
 ;; example:
-
+;;
 ;;     curl -si -F 'content=<-' http://dpaste.com/api/v1/ | \
 ;;         grep ^Location: | colrm 1 10
 
-;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
+;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste
+;; service.
+
 ;; Inspired by gist.el
 
-;;  TODO: add field for title
+;; Todo:
+
+;; - Add field for title
+;; - Use emacs lisp code to post paste instead curl
 
 ;;; Code:
-
-
 (defvar dpaste-poster "dpaste.el"
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
