@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2008, 2009 Greg Newman <20seven.org>
 
-;; Version: 0.1.3
+;; Version: 0.2
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
 ;; Author: Greg Newman <grep@20seven.org>
@@ -56,7 +56,6 @@
 
 ;; Todo:
 
-;; - Add field for title (version 0.2)
 ;; - Use emacs lisp code to post paste instead curl (version 0.3)
 
 ;;; Code:
@@ -78,12 +77,12 @@
 
 
 ;;;###autoload
-(defun dpaste-region (begin end &optional arg)
+(defun dpaste-region (begin end title &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
 url to the kill-ring.
 
 With a prefix argument, use hold option."
-  (interactive "r\nP")
+  (interactive "r\nsPaste title: \nP")
   (let* ((file (or (buffer-file-name) (buffer-name)))
          (name (file-name-nondirectory file))
          (lang (or (cdr (assoc major-mode dpaste-supported-modes-alist))
@@ -92,9 +91,10 @@ With a prefix argument, use hold option."
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
 			     (concat "curl -si"
-                                     " -F 'poster=" dpaste-poster "'"
-                                     " -F 'language=" lang "'"
                                      " -F 'content=<-'"
+                                     " -F 'language=" lang "'"
+                                     " -F 'title=" title "'"
+                                     " -F 'poster=" dpaste-poster "'"
                                      " -F 'hold=" hold "'"
                                      " http://dpaste.com/api/v1/")
 			     output)
@@ -105,24 +105,24 @@ With a prefix argument, use hold option."
     (kill-buffer output)))
 
 ;;;###autoload
-(defun dpaste-buffer (&optional arg)
+(defun dpaste-buffer (title &optional arg)
   "Post the current buffer to dpaste.com and yank the url to the
 kill-ring.
 
 With a prefix argument, use hold option."
-  (interactive "P")
-  (dpaste-region (point-min) (point-max) arg))
+  (interactive "sPaste title: \nP")
+  (dpaste-region (point-min) (point-max) title arg))
 
 ;;;###autoload
-(defun dpaste-region-or-buffer (&optional arg)
+(defun dpaste-region-or-buffer (title &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
 url to the kill-ring.
 
 With a prefix argument, use hold option."
-  (interactive "P")
+  (interactive "sPaste title: \nP")
   (condition-case nil
-      (dpaste-region (point) (mark) arg)
-    (mark-inactive (dpaste-buffer arg))))
+      (dpaste-region (point) (mark) title arg)
+    (mark-inactive (dpaste-buffer title arg))))
 
 
 (provide 'dpaste)
