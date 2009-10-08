@@ -2,10 +2,11 @@
 
 ;; Copyright (C) 2008 Greg Newman <20seven.org>
 
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
 ;; Author: Greg Newman <grep@20seven.org>
+;;	Guilherme Gondim <semente@taurinus.org>
 ;; Maintainer: Greg Newman <greg@20seven.org>
 
 ;; This file is NOT part of GNU Emacs.
