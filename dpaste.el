@@ -42,6 +42,10 @@
 
 ;;; Code:
 
+
+(defvar dpaste-poster "dpaste.el"
+  "Paste author name or e-mail. Don't put more than 30 characters here.")
+
 (defvar dpaste-supported-modes-alist '((css-mode . "Css")
                                        (diff-mode . "Diff")
                                        (haskell-mode . "Haskell")
@@ -68,6 +72,7 @@ url to the kill-ring."
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
 			     (concat "curl -si"
+                                     " -F 'poster=" dpaste-poster "'"
                                      " -F 'language=" lang "'"
                                      " -F 'content=<-'"
                                      " http://dpaste.com/api/v1/")
