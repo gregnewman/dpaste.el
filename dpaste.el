@@ -79,7 +79,7 @@ url to the kill-ring."
 			     output)
     (with-current-buffer output
       (search-forward-regexp "^Location: \\(http://dpaste\\.com/[0-9]+/\\)")
-      (message "dpaste created: %s" (match-string 1))
+      (message "Paste created: %s (yanked)" (match-string 1))
       (kill-new (match-string 1)))
     (kill-buffer output)))
 
