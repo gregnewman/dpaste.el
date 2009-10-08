@@ -56,8 +56,8 @@
 
 ;; Todo:
 
-;; - Add field for title
-;; - Use emacs lisp code to post paste instead curl
+;; - Add field for title (version 0.2)
+;; - Use emacs lisp code to post paste instead curl (version 0.3)
 
 ;;; Code:
 (defvar dpaste-poster "dpaste.el"
