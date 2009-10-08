@@ -48,9 +48,9 @@
 ;; something like "C:\Program Files\Emacs<version>\site-lisp". Then
 ;; add the follow instructions in your .emacs.el:
 
-;;     (autoload 'dpaste "dpaste" nil t)
+;;     (require 'dpaste nil)
 ;;     (global-set-key (kbd "C-c p") 'dpaste-region-or-buffer)
-;;     (dpaste-poster "Guido van Rossum")
+;;     (setq dpaste-poster "semente")
 
 ;; Then with C-c p you can run `dpaste-region-or-buffer'. With a prefix
 ;; argument (C-u C-c p), your paste will use the hold option.
