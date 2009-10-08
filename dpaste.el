@@ -41,7 +41,7 @@
 ;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste
 ;; service.
 
-;; Installation:
+;; Installation and setup:
 
 ;; Put this file in a directory where Emacs can find it. On GNU/Linux
 ;; it's usually /usr/local/share/emacs/site-lisp/ and on Windows it's
@@ -50,6 +50,7 @@
 
 ;;     (autoload 'dpaste "dpaste" nil t)
 ;;     (global-set-key (kbd "C-c p") 'dpaste-region-or-buffer)
+;;     (dpaste-poster "Guido van Rossum")
 
 ;; Then with C-c p you can run `dpaste-region-or-buffer'. With a prefix
 ;; argument (C-u C-c p), your paste will use the hold option.
