@@ -48,6 +48,7 @@
                                        (javascript-mode . "JScript")
                                        (js2-mode . "JScript")
                                        (python-mode . "Python")
+                                       (inferior-python-mode . "PythonConsole")
                                        (ruby-mode . "Ruby")
                                        (text-mode . "Plain")
                                        (sql-mode . "Sql")
