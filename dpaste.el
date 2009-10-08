@@ -5,7 +5,7 @@
 ;; Version: 0.1.1
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
-;; Author: Greg Newman <20seven.org>
+;; Author: Greg Newman <grep@20seven.org>
 ;; Maintainer: Greg Newman <greg@20seven.org>
 
 ;; This file is NOT part of GNU Emacs.
@@ -31,7 +31,8 @@
 ;; http://dpaste.com and and put the url into the kill-ring current api usage
 ;; example:
 
-;;     curl -si -F 'content=<-' http://dpaste.com/api/v1/ | grep  ^Location: | colrm 1 10
+;;     curl -si -F 'content=<-' http://dpaste.com/api/v1/ | \
+;;         grep ^Location: | colrm 1 10
 
 ;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste service
 ;; Inspired by gist.el
@@ -41,21 +42,23 @@
 ;;; Code:
 
 (defvar dpaste-supported-modes-alist '((css-mode . "Css")
-                                     (diff-mode . "Diff")
-                                     (haskell-mode . "Haskell")
-                                     (html-mode . "DjangoTemplate")
-                                     (javascript-mode . "JScript")
-                                     (js2-mode . "JScript")
-                                     (python-mode . "Python")
-                                     (ruby-mode . "Ruby")
-                                     (text-mode . "Plain")
-                                     (sql-mode . "Sql")
-                                     (sh-mode . "Bash")
-                                     (xml-mode . "Xml")))
+                                       (diff-mode . "Diff")
+                                       (haskell-mode . "Haskell")
+                                       (html-mode . "DjangoTemplate")
+                                       (javascript-mode . "JScript")
+                                       (js2-mode . "JScript")
+                                       (python-mode . "Python")
+                                       (ruby-mode . "Ruby")
+                                       (text-mode . "Plain")
+                                       (sql-mode . "Sql")
+                                       (sh-mode . "Bash")
+                                       (xml-mode . "Xml")))
+
 
 ;;;###autoload
 (defun dpaste-region (begin end)
-  "post the current region or buffer to dpaste.com and yank the url to the kill-ring"
+  "Post the current region or buffer to dpaste.com and yank the
+url to the kill-ring."
   (interactive "r")
   (let* ((file (or (buffer-file-name) (buffer-name)))
          (name (file-name-nondirectory file))
@@ -71,21 +74,23 @@
       (search-backward-regexp "^Location: \\([A-Za-z0-9]+.*\\)$")
       (message "dpaste created: %s" (match-string 1))
       (kill-new (match-string 1)))
-   (kill-buffer output)))
+    (kill-buffer output)))
 
 ;;;###autoload
 (defun dpaste-buffer ()
-  "post the current buffer to dpaste.com and yank the url to the kill-ring"
+  "Post the current buffer to dpaste.com and yank the url to the
+kill-ring."
   (interactive)
   (dpaste-region (point-min) (point-max)))
 
 ;;;###autoload
 (defun dpaste-region-or-buffer ()
-  "post the current region or buffer to dpaste.com and yank the url to the kill-ring"
+  "Post the current region or buffer to dpaste.com and yank the
+url to the kill-ring."
   (interactive)
   (condition-case nil
       (dpaste-region (point) (mark))
-      (mark-inactive (dpaste-buffer))))
+    (mark-inactive (dpaste-buffer))))
 
 
 (provide 'dpaste)
