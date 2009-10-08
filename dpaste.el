@@ -51,7 +51,6 @@
                                        (python-mode . "Python")
                                        (inferior-python-mode . "PythonConsole")
                                        (ruby-mode . "Ruby")
-                                       (text-mode . "Plain")
                                        (sql-mode . "Sql")
                                        (sh-mode . "Bash")
                                        (xml-mode . "Xml")))
@@ -64,12 +63,14 @@ url to the kill-ring."
   (interactive "r")
   (let* ((file (or (buffer-file-name) (buffer-name)))
          (name (file-name-nondirectory file))
-         (ext (or (cdr (assoc major-mode dpaste-supported-modes-alist))
+         (lang (or (cdr (assoc major-mode dpaste-supported-modes-alist))
                   ""))
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
-			     (concat "curl -si -F 'language=" ext
-				     "' -F 'content=<-' http://dpaste.com/api/v1/")
+			     (concat "curl -si"
+                                     " -F 'language=" lang "'"
+                                     " -F 'content=<-'"
+                                     " http://dpaste.com/api/v1/")
 			     output)
     (with-current-buffer output
       (search-backward-regexp "^Location: \\([A-Za-z0-9]+.*\\)$")
