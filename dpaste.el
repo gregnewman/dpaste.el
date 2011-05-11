@@ -100,7 +100,7 @@ With a prefix argument, use hold option."
                                      " http://dpaste.com/api/v1/")
 			     output)
     (with-current-buffer output
-      (search-forward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[0-9]+/\\)")
+      (search-backward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[0-9]+/\\)")
       (message "Paste created: %s (yanked)" (match-string 1))
       (kill-new (match-string 1)))
     (kill-buffer output)))
