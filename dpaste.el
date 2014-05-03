@@ -101,7 +101,7 @@ With a prefix argument, use hold option."
 			     output)
     (with-current-buffer output
       (beginning-of-buffer)
-      (search-forward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[0-9]+/\\)")
+      (search-forward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[A-Z0-9]+/\\)")
       (message "Paste created: %s (yanked)" (match-string 1))
       (kill-new (match-string 1)))
     (kill-buffer output)))
