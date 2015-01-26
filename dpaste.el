@@ -63,18 +63,18 @@
 (defvar dpaste-poster "dpaste.el"
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
-(defvar dpaste-supported-modes-alist '((css-mode . "Css")
-                                       (diff-mode . "Diff")
-                                       (haskell-mode . "Haskell")
-                                       (html-mode . "DjangoTemplate")
-                                       (javascript-mode . "JScript")
-                                       (js2-mode . "JScript")
-                                       (python-mode . "Python")
-                                       (inferior-python-mode . "PythonConsole")
-                                       (ruby-mode . "Ruby")
-                                       (sql-mode . "Sql")
-                                       (sh-mode . "Bash")
-                                       (xml-mode . "Xml")))
+(defvar dpaste-supported-modes-alist '((css-mode . "css")
+                                       (diff-mode . "diff")
+                                       (haskell-mode . "haskell")
+                                       (html-mode . "django")
+                                       (javascript-mode . "js")
+                                       (js2-mode . "js")
+                                       (python-mode . "python")
+                                       (inferior-python-mode . "pycon")
+                                       (ruby-mode . "ruby")
+                                       (sql-mode . "sql")
+                                       (sh-mode . "bash")
+                                       (xml-mode . "xml")))
 
 
 ;;;###autoload
@@ -88,20 +88,20 @@ With a prefix argument, use hold option."
          (name (file-name-nondirectory file))
          (lang (or (cdr (assoc major-mode dpaste-supported-modes-alist))
                   ""))
-         (hold (if arg "on" "off"))
+         (expiry_days "30")
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
 			     (concat "curl -si"
                                      " -F 'content=<-'"
-                                     " -F 'language=" lang "'"
+                                     " -F 'syntax=" lang "'"
                                      " -F 'title=" title "'"
                                      " -F 'poster=" dpaste-poster "'"
-                                     " -F 'hold=" hold "'"
-                                     " http://dpaste.com/api/v1/")
+                                     " -F 'expiry_days=" expiry_days "'"
+                                     " http://dpaste.com/api/v2/")
 			     output)
     (with-current-buffer output
       (beginning-of-buffer)
-      (search-forward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[A-Z0-9]+\\)")
+      (search-forward-regexp "^Location: \\(http://dpaste\\.com/[0-9a-zA-Z]+\\)")
       (message "Paste created: %s (yanked)" (match-string 1))
       (kill-new (match-string 1)))
     (kill-buffer output)))
