@@ -6,7 +6,7 @@
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
 ;; Author: Greg Newman <grep@20seven.org>
-;;	Guilherme Gondim <semente@taurinus.org>
+;;         Guilherme Gondim <semente@taurinus.org>
 ;; Maintainer: Greg Newman <greg@20seven.org>
 
 ;; This file is NOT part of GNU Emacs.
@@ -35,8 +35,8 @@
 
 ;; Current dpaste.com API usage example:
 
-;;     curl -si -F 'content=<-' http://dpaste.com/api/v1/ | \
-;;         grep ^Location: | colrm 1 10
+;;     curl -si -F 'content=<-' http://dpaste.com/api/v2/ \
+;;       | grep ^Location: | colrm 1 10
 
 ;; Thanks to Paul Bissex (http://news.e-scribe.com) for a great paste
 ;; service.
@@ -91,17 +91,17 @@ With a prefix argument, use hold option."
          (hold (if arg "on" "off"))
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
-			     (concat "curl -si"
+                             (concat "curl -si"
                                      " -F 'content=<-'"
                                      " -F 'language=" lang "'"
                                      " -F 'title=" title "'"
                                      " -F 'poster=" dpaste-poster "'"
                                      " -F 'hold=" hold "'"
-                                     " http://dpaste.com/api/v1/")
-			     output)
+                                     " http://dpaste.com/api/v2/")
+                             output)
     (with-current-buffer output
       (beginning-of-buffer)
-      (search-forward-regexp "^Location: \\(http://dpaste\\.com/\\(hold/\\)?[A-Z0-9]+\\)")
+      (search-forward-regexp "^Location: \\(http://dpaste.com/[[:upper:][:digit:]]+\\)")
       (message "Paste created: %s (yanked)" (match-string 1))
       (kill-new (match-string 1)))
     (kill-buffer output)))
