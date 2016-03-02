@@ -63,18 +63,18 @@
 (defvar dpaste-poster "dpaste.el"
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
-(defvar dpaste-supported-modes-alist '((css-mode . "Css")
-                                       (diff-mode . "Diff")
-                                       (haskell-mode . "Haskell")
-                                       (html-mode . "DjangoTemplate")
-                                       (javascript-mode . "JScript")
-                                       (js2-mode . "JScript")
-                                       (python-mode . "Python")
-                                       (inferior-python-mode . "PythonConsole")
-                                       (ruby-mode . "Ruby")
-                                       (sql-mode . "Sql")
-                                       (sh-mode . "Bash")
-                                       (xml-mode . "Xml")))
+(defvar dpaste-supported-modes-alist '((css-mode . "css")
+                                       (diff-mode . "diff")
+                                       (haskell-mode . "haskell")
+                                       (html-mode . "html")
+                                       (javascript-mode . "js")
+                                       (js2-mode . "js")
+                                       (python-mode . "python")
+                                       (inferior-python-mode . "pycon")
+                                       (ruby-mode . "rb")
+                                       (sql-mode . "sql")
+                                       (sh-mode . "bash")
+                                       (xml-mode . "xml")))
 
 
 ;;;###autoload
@@ -86,14 +86,14 @@ With a prefix argument, use hold option."
   (interactive "r\nsPaste title: \nP")
   (let* ((file (or (buffer-file-name) (buffer-name)))
          (name (file-name-nondirectory file))
-         (lang (or (cdr (assoc major-mode dpaste-supported-modes-alist))
-                  ""))
+         (syntax (or (cdr (assoc major-mode dpaste-supported-modes-alist))
+                     ""))
          (hold (if arg "on" "off"))
          (output (generate-new-buffer "*dpaste*")))
     (shell-command-on-region begin end
                              (concat "curl -si"
                                      " -F 'content=<-'"
-                                     " -F 'language=" lang "'"
+                                     " -F 'syntax=" syntax "'"
                                      " -F 'title=" title "'"
                                      " -F 'poster=" dpaste-poster "'"
                                      " -F 'hold=" hold "'"
