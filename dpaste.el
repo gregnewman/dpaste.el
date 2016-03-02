@@ -122,9 +122,9 @@ url to the kill-ring.
 
 With a prefix argument, use hold option."
   (interactive "sPaste title: \nP")
-  (condition-case nil
-      (dpaste-region (point) (mark) title arg)
-    (mark-inactive (dpaste-buffer title arg))))
+  (if (use-region-p)
+      (dpaste-region (region-beginning) (region-end) title arg)
+    (dpaste-buffer title arg)))
 
 
 (provide 'dpaste)
