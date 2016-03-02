@@ -60,7 +60,7 @@
 ;; - Use emacs lisp code to post paste instead curl (version 0.3)
 
 ;;; Code:
-(defvar dpaste-poster "dpaste.el"
+(defvar dpaste-poster (user-full-name)
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
 (defvar dpaste-supported-modes-alist '((css-mode . "css")
