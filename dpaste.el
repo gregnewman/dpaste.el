@@ -60,6 +60,8 @@
 ;; - Use emacs lisp code to post paste instead curl (version 0.3)
 
 ;;; Code:
+(require 'url)
+
 (defvar dpaste-poster (user-full-name)
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
@@ -80,31 +82,33 @@
 ;;;###autoload
 (defun dpaste-region (begin end title &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
-url to the kill-ring.
-
-With a prefix argument, use hold option."
+url to the kill-ring."
   (interactive "r\nsPaste title: \nP")
-  (let* ((file (or (buffer-file-name) (buffer-name)))
-         (name (file-name-nondirectory file))
-         (syntax (or (cdr (assoc major-mode dpaste-supported-modes-alist))
+  (let* ((syntax (or (cdr (assoc major-mode dpaste-supported-modes-alist))
                      ""))
-         (hold (if arg "on" "off"))
-         (output (generate-new-buffer "*dpaste*")))
-    (shell-command-on-region begin end
-                             (concat "curl -si"
-                                     " -F 'content=<-'"
-                                     " -F 'syntax=" syntax "'"
-                                     " -F 'title=" title "'"
-                                     " -F 'poster=" dpaste-poster "'"
-                                     " -F 'hold=" hold "'"
-                                     " http://dpaste.com/api/v2/")
-                             output)
-    (with-current-buffer output
-      (beginning-of-buffer)
-      (search-forward-regexp "^Location: \\(http://dpaste.com/[[:upper:][:digit:]]+\\)")
-      (message "Paste created: %s (yanked)" (match-string 1))
-      (kill-new (match-string 1)))
-    (kill-buffer output)))
+         (url-request-method "POST")
+         (url-request-extra-headers
+          '(("Content-Type" . "application/x-www-form-urlencoded")))
+         (url-request-data
+          (format "content=%s&syntax=%s&title=%s&poster=%s"
+                  (url-hexify-string (buffer-substring-no-properties begin end))
+                  (url-hexify-string syntax)
+                  (url-hexify-string title)
+                  (url-hexify-string dpaste-poster))))
+    (with-current-buffer (url-retrieve-synchronously
+                          "http://dpaste.com/api/v2/")
+      (goto-char (point-min))
+      (if (search-forward-regexp
+           "^Location: \\(http://dpaste.com/[[:upper:][:digit:]]+\\)"
+           (point-max)
+           t)
+          (let ((paste-url (match-string 1)))
+            (message "Paste created: %s (yanked)" paste-url)
+            (kill-new paste-url)
+            (kill-buffer))
+        ;; if we can't find the Location, show the http result buffer
+        (switch-to-buffer (current-buffer)))
+      )))
 
 ;;;###autoload
 (defun dpaste-buffer (title &optional arg)
