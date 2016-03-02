@@ -143,18 +143,14 @@ url to the kill-ring."
 ;;;###autoload
 (defun dpaste-buffer (title &optional arg)
   "Post the current buffer to dpaste.com and yank the url to the
-kill-ring.
-
-With a prefix argument, use hold option."
+kill-ring."
   (interactive "sPaste title: \nP")
   (dpaste-region (point-min) (point-max) title arg))
 
 ;;;###autoload
 (defun dpaste-region-or-buffer (title &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
-url to the kill-ring.
-
-With a prefix argument, use hold option."
+url to the kill-ring."
   (interactive "sPaste title: \nP")
   (condition-case nil
       (dpaste-region (point) (mark) title arg)
