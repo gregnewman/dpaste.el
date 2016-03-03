@@ -152,9 +152,9 @@ kill-ring."
   "Post the current region or buffer to dpaste.com and yank the
 url to the kill-ring."
   (interactive "sPaste title: \nP")
-  (condition-case nil
-      (dpaste-region (point) (mark) title arg)
-    (mark-inactive (dpaste-buffer title arg))))
+  (if (use-region-p)
+      (dpaste-region (region-beginning) (region-end) title arg)
+    (dpaste-buffer title arg)))
 
 
 (provide 'dpaste)
