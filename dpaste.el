@@ -60,67 +60,97 @@
 ;; - Use emacs lisp code to post paste instead curl (version 0.3)
 
 ;;; Code:
-(defvar dpaste-poster "dpaste.el"
+(require 'url)
+
+(defvar dpaste-poster (user-full-name)
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
-(defvar dpaste-supported-modes-alist '((css-mode . "css")
-                                       (diff-mode . "diff")
-                                       (haskell-mode . "haskell")
-                                       (html-mode . "html")
-                                       (javascript-mode . "js")
-                                       (js2-mode . "js")
-                                       (python-mode . "python")
-                                       (inferior-python-mode . "pycon")
-                                       (ruby-mode . "rb")
-                                       (sql-mode . "sql")
-                                       (sh-mode . "bash")
-                                       (xml-mode . "xml")))
+(defvar dpaste-supported-modes-alist
+  '((c++-mode . "cpp")
+    (c-mode . "c")
+    (conf-mode . "ini")
+    (conf-space-mode . "ini")
+    (conf-unix-mode . "ini")
+    (conf-windows-mode . "ini")
+    (cperl-mode . "perl")
+    (css-mode . "css")
+    (diff-mode . "diff")
+    (diff-mode . "diff")
+    (emacs-lisp-mode . "common-lisp")
+    (haskell-mode . "haskell")
+    (html-mode . "html")
+    (inferior-python-mode . "pycon")
+    (java-mode . "java")
+    (javascript-mode . "js")
+    (js2-mode . "js")
+    (lisp-interaction-mode . "common-lisp")
+    (lisp-mode . "common-lisp")
+    (lua-mode . "lua")
+    (magit-diff-mode . "diff")
+    (makefile-automake-mode . "make")
+    (makefile-bsdmake-mode . "make")
+    (makefile-gmake-mode . "make")
+    (makefile-imake-mode . "make")
+    (makefile-makepp-mode . "make")
+    (makefile-mode . "make")
+    (prolog-mode . "prolog")
+    (python-2-mode . "python")
+    (python-3-mode . "python3")
+    (python-basic-mode . "python")
+    (python-mode . "python")
+    (ruby-mode . "rb")
+    (scheme-mode . "scheme")
+    (sh-mode . "bash")
+    (shell-mode . "bash")
+    (smalltalk-mode . "smalltalk")
+    (sql-mode . "sql")
+    (web-mode . "html")
+    (xml-mode . "xml")
+    (yaml-mode . "yaml")))
 
 
 ;;;###autoload
 (defun dpaste-region (begin end title &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
-url to the kill-ring.
-
-With a prefix argument, use hold option."
+url to the kill-ring."
   (interactive "r\nsPaste title: \nP")
-  (let* ((file (or (buffer-file-name) (buffer-name)))
-         (name (file-name-nondirectory file))
-         (syntax (or (cdr (assoc major-mode dpaste-supported-modes-alist))
+  (let* ((syntax (or (cdr (assoc major-mode dpaste-supported-modes-alist))
                      ""))
-         (hold (if arg "on" "off"))
-         (output (generate-new-buffer "*dpaste*")))
-    (shell-command-on-region begin end
-                             (concat "curl -si"
-                                     " -F 'content=<-'"
-                                     " -F 'syntax=" syntax "'"
-                                     " -F 'title=" title "'"
-                                     " -F 'poster=" dpaste-poster "'"
-                                     " -F 'hold=" hold "'"
-                                     " http://dpaste.com/api/v2/")
-                             output)
-    (with-current-buffer output
-      (beginning-of-buffer)
-      (search-forward-regexp "^Location: \\(http://dpaste.com/[[:upper:][:digit:]]+\\)")
-      (message "Paste created: %s (yanked)" (match-string 1))
-      (kill-new (match-string 1)))
-    (kill-buffer output)))
+         (url-request-method "POST")
+         (url-request-extra-headers
+          '(("Content-Type" . "application/x-www-form-urlencoded")))
+         (url-request-data
+          (format "content=%s&syntax=%s&title=%s&poster=%s"
+                  (url-hexify-string (buffer-substring-no-properties begin end))
+                  (url-hexify-string syntax)
+                  (url-hexify-string title)
+                  (url-hexify-string dpaste-poster))))
+    (with-current-buffer (url-retrieve-synchronously
+                          "http://dpaste.com/api/v2/")
+      (goto-char (point-min))
+      (if (search-forward-regexp
+           "^Location: \\(http://dpaste.com/[[:upper:][:digit:]]+\\)"
+           (point-max)
+           t)
+          (let ((paste-url (match-string 1)))
+            (message "Paste created: %s (yanked)" paste-url)
+            (kill-new paste-url)
+            (kill-buffer))
+        ;; if we can't find the Location, show the http result buffer
+        (switch-to-buffer (current-buffer)))
+      )))
 
 ;;;###autoload
 (defun dpaste-buffer (title &optional arg)
   "Post the current buffer to dpaste.com and yank the url to the
-kill-ring.
-
-With a prefix argument, use hold option."
+kill-ring."
   (interactive "sPaste title: \nP")
   (dpaste-region (point-min) (point-max) title arg))
 
 ;;;###autoload
 (defun dpaste-region-or-buffer (title &optional arg)
   "Post the current region or buffer to dpaste.com and yank the
-url to the kill-ring.
-
-With a prefix argument, use hold option."
+url to the kill-ring."
   (interactive "sPaste title: \nP")
   (condition-case nil
       (dpaste-region (point) (mark) title arg)
