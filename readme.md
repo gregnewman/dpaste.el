@@ -1,9 +1,9 @@
-** Dpaste.el
+## Dpaste.el
 
 dpaste.el provides functions to post a region or buffer to
 <http://dpaste.com> and put the paste URL into the kill-ring.
 
-** Installation and setup:
+## Installation and setup:
 
 Put this file in a directory where Emacs can find it. On GNU/Linux
 it's usually /usr/local/share/emacs/site-lisp/ and on Windows it's
