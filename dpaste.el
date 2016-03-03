@@ -1,13 +1,13 @@
 ;;; dpaste.el --- Emacs integration for dpaste.com
 
-;; Copyright (C) 2008, 2009 Greg Newman <20seven.org>
+;; Copyright (C) 2008, 2009 Greg Newman <greg@gregnewman.org>
 
 ;; Version: 0.2
 ;; Keywords: paste pastie pastebin dpaste python
 ;; Created: 01 Dec 2008
-;; Author: Greg Newman <grep@20seven.org>
+;; Author: Greg Newman <greg@gregnewman.org>
 ;;         Guilherme Gondim <semente@taurinus.org>
-;; Maintainer: Greg Newman <greg@20seven.org>
+;; Maintainer: Greg Newman <greg@gregnewman.org>
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -54,10 +54,6 @@
 
 ;; Then with C-c p you can run `dpaste-region-or-buffer'. With a prefix
 ;; argument (C-u C-c p), your paste will use the hold option.
-
-;; Todo:
-
-;; - Use emacs lisp code to post paste instead curl (version 0.3)
 
 ;;; Code:
 (require 'url)
