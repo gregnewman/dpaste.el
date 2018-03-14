@@ -61,6 +61,9 @@
 (defvar dpaste-poster (user-full-name)
   "Paste author name or e-mail. Don't put more than 30 characters here.")
 
+(defvar dpaste-expiry-days 7
+  "Number of days before the paste is expired. Valid value is in the range of 1 and 365.")
+
 (defvar dpaste-supported-modes-alist
   '((c++-mode . "cpp")
     (c-mode . "c")
@@ -116,11 +119,12 @@ url to the kill-ring."
          (url-request-extra-headers
           '(("Content-Type" . "application/x-www-form-urlencoded")))
          (url-request-data
-          (format "content=%s&syntax=%s&title=%s&poster=%s"
+          (format "content=%s&syntax=%s&title=%s&poster=%s&expiry_days=%d"
                   (url-hexify-string (buffer-substring-no-properties begin end))
                   (url-hexify-string syntax)
                   (url-hexify-string title)
-                  (url-hexify-string dpaste-poster))))
+                  (url-hexify-string dpaste-poster)
+                  (min (max 1 dpaste-expiry-days) 365))))
     (with-current-buffer (url-retrieve-synchronously
                           "http://dpaste.com/api/v2/")
       (goto-char (point-min))
